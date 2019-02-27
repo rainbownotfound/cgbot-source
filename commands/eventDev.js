@@ -26,7 +26,13 @@ module.exports.run = (client, message, args) => {
                     })
                 });
             }
-        })
+        }).catch(() => {
+            sql.run(`CREATE TABLE IF NOT EXISTS song_event (song TEXT, reward INT(100))`).then(() => {
+                sql.run(`INSERT INTO song_event (song, reward) VALUES (?, ?)`, [parts[0], parts[1]]);
+
+                message.channel.send(`Successfully added **${parts[0]}** for **${parts[1]} CG$**!`);
+            });
+        });
     }
 };
 
